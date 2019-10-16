@@ -510,9 +510,8 @@ frame to create a new variable called `arr_type` with levels `"on time"` and
 # type your code for Question 10 here, and Knit
 nycflights <-
   nycflights %>%
-  mutate(arr_type = ifelse(arr_delay < 0, "on time", "delayed"))
+  mutate(arr_type = ifelse(arr_delay <= 0, "on time", "delayed"))
 
-nycflights %>% summarise(percent_OnTime = sum(arr_type == "on time") / n())
-nycflights %>% summarise( prop = sum(dep_type == "delayed") /sum(arr_type == "delayed"& dep_type =="on time"))
+nycflights %>% summarise( prop = sum(arr_type == "on time" & dep_type == "delayed") / n())
 ```
  
