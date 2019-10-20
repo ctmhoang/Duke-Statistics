@@ -512,6 +512,9 @@ nycflights <-
   nycflights %>%
   mutate(arr_type = ifelse(arr_delay <= 0, "on time", "delayed"))
 
-nycflights %>% summarise( prop = sum(arr_type == "on time" & dep_type == "delayed") / n())
+nycflights %>% summarise( prop = sum(arr_type == "on time" & dep_type == "delayed") / n()) # That's actually wrong ;(
+
+nycflights %>% group_by(dep_type) %>% summarise(otr = sum(arr_type == "on time") / n() )
+
 ```
  
