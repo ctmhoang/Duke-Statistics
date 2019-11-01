@@ -49,4 +49,4 @@ nycflights %>%
   nycflights %>% group_by(dep_type) %>% summarise(otr = sum(arr_type == "on time") / n() )
 
   
-  #NOTICE : & OR && IN R DIFFER TO OTHER LANGUAGES -_-. SO NEED TO DIVIDE IT TO w PARTS
+  #NOTICE : & OR && IN R DIFFER TO OTHER LANGUAGES -_-. SO NEED TO DIVIDE IT INTO 2 PARTS
