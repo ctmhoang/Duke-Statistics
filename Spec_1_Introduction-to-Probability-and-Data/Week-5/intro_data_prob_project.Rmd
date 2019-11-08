@@ -1,0 +1,180 @@
+---
+title: "Exploring the BRFSS data"
+output: 
+  html_document: 
+    fig_height: 4
+    highlight: pygments
+    theme: spacelab
+---
+
+## Setup
+
+### Load packages
+
+```{r load-packages, message = FALSE}
+library(ggplot2)
+library(dplyr)
+```
+
+### Load data
+
+Make sure your data and R Markdown files are in the same directory. When loaded
+your data file will be called `brfss2013`. Delete this note when before you submit 
+your work. 
+
+```{r load-data}
+load("brfss2013.RData")
+str(brfss2013)
+names(brfss2013)
+```
+
+
+
+* * *
+
+## Part 1: Data
+
+### Background
+
+BRFSS conducts both landline telephone- and cellular telephone-based surveys. In conducting the BRFSS landline
+telephone survey, interviewers collect data from a randomly selected adult in a household. In conducting the
+cellular telephone version of the BRFSS questionnaire, interviewers collect data from an adult who participates
+by using a cellular telephone and resides in a private residence or college housing.
+
+### Sample Description
+
+In a telephone survey such as the BRFSS, a sample record is one telephone number in the list of all telephone
+numbers the system randomly selects for dialing. To meet the BRFSS standard for the participating states'
+sample designs, one must be able to justify sample records as a probability sample of all households with
+telephones in the state. All participating areas met this criterion in 2013. Fifty-one projects used a
+disproportionate stratified sample (DSS) design for their landline samples. Guam and Puerto Rico used a simple
+random-sample design. 
+In the type of DSS design that states most commonly used in the BRFSS landline telephone sampling, BRFSS
+divides telephone numbers into two groups, or strata, which are sampled separately. The high-density and
+medium-density strata contain telephone numbers that are expected to belong mostly to households. Whether a
+telephone number goes into the high-density or medium-density stratum is determined by the number of listed
+household numbers in its hundred block, or set of 100 telephone numbers with the same area code, prefix, and
+first two digits of the suffix and all possible combinations of the last two digits. BRFSS puts numbers from
+hundred blocks with one or more listed household numbers (“1+ blocks,” or “banks”) in either the high-density
+stratum (“listed 1+ blocks”) or medium-density stratum (“unlisted 1 + blocks”). BRFSS samples the two strata
+to obtain a probability sample of all households with telephones.
+Cellular telephone sampling frames are commercially available and the system can call random samples of
+cellular telephone numbers, but doing so requires specific protocols. The basis of the 2013 BRFSS sampling
+frame is the Telecordia database of telephone exchanges (e.g., 617-492-0000 to 617-492-9999) and 1,000 banks
+(e.g., 617-492-0000 to 617-492-0999). The vendor uses dedicated cellular 1,000 banks, sorted on the basis of
+area code and exchange within a state. BRFSS forms an interval, K, by dividing the population count of
+telephone numbers in the frame, N, by the desired sample size, n. BRFSS divides the frame of telephone
+numbers into n intervals of size K telephone numbers. From each interval, BRFSS draws one 10-digit telephone
+number at random.
+The target population for cellular telephone samples in 2013 consists of persons residing in a private residence
+or college housing, who have a working cellular telephone, are aged 18 and older, and received 90 percent or
+more of their calls on cellular telephones.
+In the sample design, each state begins with a single stratum. To provide adequate sample sizes for smaller
+geographically defined populations of interest, however, many states sample disproportionately from strata that
+correspond to sub-state regions. In 2013, the 48 states or territories with disproportionately sampled geographic
+strata were Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware, Florida,
+Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Maryland, Massachusetts, 
+Michigan, Minnesota, Mississippi, Missouri, Montana, Nebraska, Nevada, New Hampshire, New Jersey, New
+Mexico, New York, North Carolina, Ohio, Oklahoma, Pennsylvania, Puerto Rico, Rhode Island, South
+Carolina, South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, the US Virgin Islands, Washington, and
+Wisconsin. As a precaution to protect the confidential responses provided by the respondent, specific variables
+(such as sub-state geographic identifiers, detailed race/ethnicity, and age greater than 80) in a given year are
+removed.
+State health departments may directly collect data from their states or they may use a contractor. In 2013, 11
+state health departments collected their data in-house; 42 contracted data collection to university survey
+research centers or commercial firms. In 2013, the CDC provided samples purchased from Marketing Systems
+Group, Inc. (MSG) to all 53 states and territories. 
+
+### Data Collection Procedure
+
+In 2013, 53 states or territories used Computer-Assisted Telephone Interview (CATI) systems. The CDC
+supports CATI programming using the Ci3 WinCATI software package. This support includes programming
+the core and module questions for data collectors, providing questionnaire scripting of state-added questions for
+states requiring such assistance, and contracting with a Ci3 consultant to assist states. Following guidelines
+provided by the BRFSS, state health personnel or contractors conduct interviews. The core portion of the
+questionnaire lasts an average of 18 minutes. Interview time for modules and state-added questions is dependent
+upon the number of questions used, but generally, they add 5 to 10 minutes to the interview.
+Interviewer retention is very high among states that conduct the survey in-house. The state coordinator or
+interviewer supervisor conduct repeated training specific to the BRFSS. Contractors typically use interviewers
+who have experience conducting telephone surveys, but these interviewers are given additional training on the
+BRFSS questionnaire and procedures before they are approved to work on BRFSS.
+BRFSS protocols require evaluation of interviewer performance. In 2013, all BRFSS surveillance sites had the
+capability to monitor their interviewers. Interviewer-monitoring systems vary from listening to the interviewer
+only at an on-site location to listening to both the interviewer and respondent at remote locations. Some states
+also use verification callbacks in addition to direct monitoring. Contractors typically conducted systematic
+monitoring of each interviewer a certain amount of time each month. All states had the capability to tabulate
+disposition code frequencies by interviewer. These data were the primary means for quantifying interviewer
+performance. 
+States conducted telephone interviews during each calendar month; they made calls seven days per week,
+during both daytime and evening hours. They followed standard BRFSS procedures for rotation of calls over
+days of the week and time of day.
+
+
+Source: [CDC.gov](https://www.cdc.gov/brfss/annual_data/annual_2013.html)
+
+
+* * *
+
+## Part 2: Research questions
+
+**Research quesion 1:**
+If you slept less than 8 hours per day, what is the probability that you got a goofd mental health?
+<ul>
+    <li> How many days full of energy in past 30 days (QLHLTH2)?</li>
+    <li> How Much Time Do You Sleep (SLEPTIM1) ?</li>
+    <li> Number of Days Mental Health Not Good (MENTHLTH)</li>
+</ul>
+**Research quesion 2:**
+If one people working out regulary, what's is the probability he/she consider it as a hobby?
+<ul>
+<li>What type of physical activity or exercise did you spend the most time doing during the past month? (EXRACT11)</li>
+<li>How many times did you do physical activities or exercises to STRENGTHEN your muscles? (STRENGTH)</li>
+<li>Leisure Time Physical Activity Calculated Variable (_TOTINDA)</li>
+</ul>
+**Research quesion 3:**
+ If we know someone is not eating fruit, what is the probability he/she has health condition poor?<br>Base on following collections of data:
+<ul>
+<li>genhlth: General Health</li>
+
+<li><span>fruit: The list below</span>
+<ul>
+<li>fruit1: How Many Times Did You Eat Fruit?</li>
+<li>fvbeans: How Many Times Did You Eat Beans Or Lentils?</li>
+<li>fvgreen: How Many Times Did You Eat Dark Green Vegetables?</li>
+<li>fvorang: How Many Times Did You Eat Orange-Colored Vegetables?</li>
+<li>vegetab1: How Many Times Did You Eat Other Vegetables?</li>
+</ul>
+</li>
+<li>How’s the relation between general health (genhlth) and eating no fruit/vegi every day (fruit < 1)?</li>
+</ul>
+
+* * *
+
+## Part 3: Exploratory data analysis
+
+NOTE: Insert code chunks as needed by clicking on the "Insert a new code chunk" 
+button (green button with orange arrow) above. Make sure that your code is visible
+in the project you submit. Delete this note when before you submit your work.
+
+**Research quesion 1:**
+
+```{r}
+
+```
+
+
+
+**Research quesion 2:**
+
+```{r}
+
+```
+
+
+
+**Research quesion 3:**
+
+```{r}
+
+```
+
