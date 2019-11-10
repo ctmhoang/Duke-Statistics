@@ -36,6 +36,8 @@ names(brfss2013)
 
 ### Background
 
+BRFSS is an ongoing surveillance system designed to measure behavioral risk factors for the non-institutionalized adult population (18 years of age and older) residing in the US.<br>
+
 BRFSS conducts both landline telephone- and cellular telephone-based surveys. In conducting the BRFSS landline
 telephone survey, interviewers collect data from a randomly selected adult in a household. In conducting the
 cellular telephone version of the BRFSS questionnaire, interviewers collect data from an adult who participates
@@ -48,7 +50,8 @@ numbers the system randomly selects for dialing. To meet the BRFSS standard for 
 sample designs, one must be able to justify sample records as a probability sample of all households with
 telephones in the state. All participating areas met this criterion in 2013. Fifty-one projects used a
 disproportionate stratified sample (DSS) design for their landline samples. Guam and Puerto Rico used a simple
-random-sample design. 
+random-sample design. <br>
+
 In the type of DSS design that states most commonly used in the BRFSS landline telephone sampling, BRFSS
 divides telephone numbers into two groups, or strata, which are sampled separately. The high-density and
 medium-density strata contain telephone numbers that are expected to belong mostly to households. Whether a
@@ -57,7 +60,8 @@ household numbers in its hundred block, or set of 100 telephone numbers with the
 first two digits of the suffix and all possible combinations of the last two digits. BRFSS puts numbers from
 hundred blocks with one or more listed household numbers (“1+ blocks,” or “banks”) in either the high-density
 stratum (“listed 1+ blocks”) or medium-density stratum (“unlisted 1 + blocks”). BRFSS samples the two strata
-to obtain a probability sample of all households with telephones.
+to obtain a probability sample of all households with telephones.<br>
+
 Cellular telephone sampling frames are commercially available and the system can call random samples of
 cellular telephone numbers, but doing so requires specific protocols. The basis of the 2013 BRFSS sampling
 frame is the Telecordia database of telephone exchanges (e.g., 617-492-0000 to 617-492-9999) and 1,000 banks
@@ -65,10 +69,12 @@ frame is the Telecordia database of telephone exchanges (e.g., 617-492-0000 to 6
 area code and exchange within a state. BRFSS forms an interval, K, by dividing the population count of
 telephone numbers in the frame, N, by the desired sample size, n. BRFSS divides the frame of telephone
 numbers into n intervals of size K telephone numbers. From each interval, BRFSS draws one 10-digit telephone
-number at random.
+number at random.<br>
+
 The target population for cellular telephone samples in 2013 consists of persons residing in a private residence
 or college housing, who have a working cellular telephone, are aged 18 and older, and received 90 percent or
-more of their calls on cellular telephones.
+more of their calls on cellular telephones.<br>
+
 In the sample design, each state begins with a single stratum. To provide adequate sample sizes for smaller
 geographically defined populations of interest, however, many states sample disproportionately from strata that
 correspond to sub-state regions. In 2013, the 48 states or territories with disproportionately sampled geographic
@@ -79,11 +85,16 @@ Mexico, New York, North Carolina, Ohio, Oklahoma, Pennsylvania, Puerto Rico, Rho
 Carolina, South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, the US Virgin Islands, Washington, and
 Wisconsin. As a precaution to protect the confidential responses provided by the respondent, specific variables
 (such as sub-state geographic identifiers, detailed race/ethnicity, and age greater than 80) in a given year are
-removed.
+removed.<br>
+
 State health departments may directly collect data from their states or they may use a contractor. In 2013, 11
 state health departments collected their data in-house; 42 contracted data collection to university survey
 research centers or commercial firms. In 2013, the CDC provided samples purchased from Marketing Systems
-Group, Inc. (MSG) to all 53 states and territories. 
+Group, Inc. (MSG) to all 53 states and territories. <br>
+
+Overall, the data collection is based on a stratified sampling strategy.
+The population is divided into groups (States) called strata. Then a random sampling (telephone), has been employed within
+each stratum.
 
 ### Data Collection Procedure
 
@@ -118,21 +129,21 @@ Source: [CDC.gov](https://www.cdc.gov/brfss/annual_data/annual_2013.html)
 ## Part 2: Research questions
 
 **Research quesion 1:**
-If you slept less than 8 hours per day, what is the probability that you got a goofd mental health?
+Is there any relationships between how much time you spend sleeping with your mental health and energy through out your day?
 <ul>
-    <li> How many days full of energy in past 30 days (QLHLTH2)?</li>
-    <li> How Much Time Do You Sleep (SLEPTIM1) ?</li>
-    <li> Number of Days Mental Health Not Good (MENTHLTH)</li>
+    <li> How many days full of energy in past 30 days (qlhlth2)?</li>
+    <li> How Much Time Do You Sleep (sleptim1) ?</li>
+    <li> Number of Days Mental Health Not Good (menthlth)</li>
 </ul>
 **Research quesion 2:**
 If one people working out regulary, what's is the probability he/she consider it as a hobby?
 <ul>
-<li>What type of physical activity or exercise did you spend the most time doing during the past month? (EXRACT11)</li>
-<li>How many times did you do physical activities or exercises to STRENGTHEN your muscles? (STRENGTH)</li>
-<li>Leisure Time Physical Activity Calculated Variable (_TOTINDA)</li>
+<li>What type of physical activity or exercise did you spend the most time doing during the past month? (exract11)</li>
+<li>How many times did you do physical activities or exercises to STRENGTHEN your muscles? (strength)</li>
+<li>Leisure Time Physical Activity Calculated Variable (X_totinda)</li>
 </ul>
 **Research quesion 3:**
- If we know someone is not eating fruit, what is the probability he/she has health condition poor?<br>Base on following collections of data:
+ Is eating fruits essential to have a good general health ?<br>Base on following collections of data:
 <ul>
 <li>genhlth: General Health</li>
 
@@ -145,11 +156,9 @@ If one people working out regulary, what's is the probability he/she consider it
 <li>vegetab1: How Many Times Did You Eat Other Vegetables?</li>
 </ul>
 </li>
-<li>How’s the relation between general health (genhlth) and eating no fruit/vegi every day (fruit < 1)?</li>
 </ul>
 
 * * *
-
 ## Part 3: Exploratory data analysis
 
 NOTE: Insert code chunks as needed by clicking on the "Insert a new code chunk" 
@@ -157,19 +166,58 @@ button (green button with orange arrow) above. Make sure that your code is visib
 in the project you submit. Delete this note when before you submit your work.
 
 **Research quesion 1:**
+If you slept less than 8 hours per day, what is the probability that you got a good mental health?
+
 
 ```{r}
+brfss2013 %>% 
+  select(qlhlth2, sleptim1,menthlth) %>% 
+  str()
+```
+
+```{r}
+filteredData = brfss2013[!rowSums(is.na(brfss2013[c('qlhlth2','sleptim1', 'menthlth' )])), ]
 
 ```
 
+
+```{r}
+filteredData <- filteredData %>%
+  mutate(isEnoughSleep = ifelse(sleptim1 >= 7 & sleptim1 <= 9 ,"Adequate", "Inappropriate"))
+
+filteredData <- filteredData %>%
+  mutate(isHappy = ifelse(menthlth >= 10,"Bad", "Good"))
+
+filteredData <- filteredData %>%
+  mutate(isActive = ifelse(qlhlth2 >= 20,"Energetic", "Sluggish"))
+
+```
+
+```{r}
+filteredData$isEnoughSleep <- as.factor(filteredData$isEnoughSleep)
+filteredData$isHappy <- as.factor(filteredData$isHappy)
+filteredData$isActive <- as.factor(filteredData$isActive)
+ggplot(filteredData, aes(x=isEnoughSleep, fill = isActive)) +
+  geom_bar(position="dodge") + facet_wrap( ~ isHappy, ncol=2) +
+  ggtitle('Does  sleep affects mental health and your energery ')
+```
 
 
 **Research quesion 2:**
 
 ```{r}
+filteredData <-filteredData %>%
+  filter(X_totinda != 9)
+
+filteredData <-filteredData %>%
+  filter(strength != 999 | strength !='')
+
 
 ```
 
+```{r}
+
+```
 
 
 **Research quesion 3:**
