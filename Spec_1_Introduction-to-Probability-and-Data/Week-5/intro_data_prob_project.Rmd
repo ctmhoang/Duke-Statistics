@@ -138,12 +138,13 @@ Is there any relationships between how much time you spend sleeping with your me
 **Research quesion 2:**
 If one people working out regulary, what's is the probability he/she consider it as a hobby?
 <ul>
-<li>What type of physical activity or exercise did you spend the most time doing during the past month? (exract11)</li>
+<li>Now thinking about your physical health, which includes physical illness and injury, for how many days during the
+past 30 days was your physical health not good? (PHYSHLTH) </li>
 <li>How many times did you do physical activities or exercises to STRENGTHEN your muscles? (strength)</li>
-<li>Leisure Time Physical Activity Calculated Variable (X_totinda)</li>
+<li>Adults who reported doing physical activity or exercise during the past 30 days other than their regular job (X_totinda)</li>
 </ul>
 **Research quesion 3:**
- Is eating fruits essential to have a good general health ?<br>Base on following collections of data:
+ Is consuming fruits/ juices essential to have a good general health ?<br>Base on following collections of data:
 <ul>
 <li>genhlth: General Health</li>
 
@@ -177,7 +178,6 @@ brfss2013 %>%
 
 ```{r}
 filteredData = brfss2013[!rowSums(is.na(brfss2013[c('qlhlth2','sleptim1', 'menthlth' )])), ]
-
 ```
 
 
@@ -205,17 +205,38 @@ ggplot(filteredData, aes(x=isEnoughSleep, fill = isActive)) +
 
 **Research quesion 2:**
 
+
 ```{r}
-filteredData <-filteredData %>%
-  filter(X_totinda != 9)
-
-filteredData <-filteredData %>%
-  filter(strength != 999 | strength !='')
-
-
+filteredData = brfss2013[!rowSums(is.na(brfss2013[c('X_totinda','strength','physhlth')])), ]
 ```
 
 ```{r}
+filteredData$strength[(filteredData$strength>= 101) & (filteredData$strength <=199)] =
+  (filteredData$strength[(filteredData$strength>= 101) & (filteredData$strength <=199)]) - 100
+
+filteredData$strength[(filteredData$strength>= 201) & (filteredData$strength <=299)] =
+  (filteredData$strength[(filteredData$strength>= 201) & (filteredData$strength <=299)] - 200) / 7
+
+filteredData$strength[(filteredData$strength>= 300)] =
+  (filteredData$strength[(filteredData$strength>= 300)] - 300) /30
+
+filteredData$strength[filteredData$strength>=10] = 10
+
+
+filteredData = filteredData[!rowSums(is.na(filteredData[c('X_totinda','strength')])), ]
+
+```
+
+
+```{r}
+filteredData$X_totinda <- as.factor(filteredData$X_totinda)
+filteredData$physhlth <- as.factor(filteredData$physhlth)
+
+summary(filteredData$physhlth)
+
+ggplot(filteredData, aes(x = strength, y = physhlth, colour=X_totinda)) +
+  geom_point(alpha=0.4, position=position_jitter(width=.1,height=.1))+
+  facet_wrap( ~ X_totinda, ncol=1)
 
 ```
 
@@ -223,6 +244,29 @@ filteredData <-filteredData %>%
 **Research quesion 3:**
 
 ```{r}
+filteredData = brfss2013[!rowSums(is.na(brfss2013[c('educa', 'smoke100')])), ]
+
+educa_labs = c("KG", "EL", "HG", "HG_GRD", "COL/TECH/3", "COL/4")
+
+
+filteredData <- filteredData %>% group_by(educa) %>%
+  summarise( smoke100 = sum(smoke100 == "Yes"), smoke100_pc = smoke100*100/n())
+
+ggplot(data = filteredData , aes(x = educa, y = smoke100_pc)) + 
+  geom_col() +
+  scale_x_discrete(labels = educa_labs) +
+  ylab("% who've smoked 100 cigs") +
+  xlab("Education Level") +
+  scale_y_continuous(labels = function(x) paste0(x,"%"))
+
 
 ```
 
+**Research quesion 4:**
+
+```{r}
+#brfss2013_clean = brfss2013[!rowSums(is.na(brfss2013[c('genhlth','fruitju1 ','fruit1', 'fvbeans', 'fvgreen', 'fvorang', 'vegetab1')])), ]
+```
+
+```{r}
+```
