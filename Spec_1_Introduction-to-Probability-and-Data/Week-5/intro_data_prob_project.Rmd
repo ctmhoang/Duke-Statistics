@@ -24,8 +24,6 @@ your work.
 
 ```{r load-data}
 load("brfss2013.RData")
-str(brfss2013)
-names(brfss2013)
 ```
 
 
@@ -128,70 +126,65 @@ Source: [CDC.gov](https://www.cdc.gov/brfss/annual_data/annual_2013.html)
 
 ## Part 2: Research questions
 
+I’ll focus on a health problem - sleep, work-out and smoking.
+
 **Research quesion 1:**
-Is there any relationships between how much time you spend sleeping with your mental health and energy through out your day?
+Does sleep affects mental health and your energery?
 <ul>
-    <li> How many days full of energy in past 30 days (qlhlth2)?</li>
-    <li> How Much Time Do You Sleep (sleptim1) ?</li>
-    <li> Number of Days Mental Health Not Good (menthlth)</li>
+    <li>qlhlth2: How many days full of energy in past 30 days?</li>
+    <li>sleptim1: How Much Time Do You Sleep ?</li>
+    <li>menthlth: Number of Days Mental Health Not Good</li>
 </ul>
 **Research quesion 2:**
-If one people working out regulary, what's is the probability he/she consider it as a hobby?
+Are people who working out catch physical illness regularly ?
 <ul>
-<li>Now thinking about your physical health, which includes physical illness and injury, for how many days during the
-past 30 days was your physical health not good? (PHYSHLTH) </li>
-<li>How many times did you do physical activities or exercises to STRENGTHEN your muscles? (strength)</li>
-<li>Adults who reported doing physical activity or exercise during the past 30 days other than their regular job (X_totinda)</li>
+<li>physhlth: Now thinking about your physical health, which includes physical illness and injury, for how many days during the
+past 30 days was your physical health not good? </li>
+<li>strength: How many times did you do physical activities or exercises to STRENGTHEN your muscles?</li>
+<li>X_totinda: Adults who reported doing physical activity or exercise during the past 30 days other than their regular job</li>
 </ul>
 **Research quesion 3:**
- Is consuming fruits/ juices essential to have a good general health ?<br>Base on following collections of data:
+Is there a correlation between education level and tobacco use? 
 <ul>
-<li>genhlth: General Health</li>
-
-<li><span>fruit: The list below</span>
-<ul>
-<li>fruit1: How Many Times Did You Eat Fruit?</li>
-<li>fvbeans: How Many Times Did You Eat Beans Or Lentils?</li>
-<li>fvgreen: How Many Times Did You Eat Dark Green Vegetables?</li>
-<li>fvorang: How Many Times Did You Eat Orange-Colored Vegetables?</li>
-<li>vegetab1: How Many Times Did You Eat Other Vegetables?</li>
-</ul>
-</li>
+<li>educa: Education Level</li>
+<li>smoke100: Smoked At Least 100 Cigarettes</li>
+<li>smokday2: Frequency Of Days Now Smoking</li>
 </ul>
 
 * * *
 ## Part 3: Exploratory data analysis
 
-NOTE: Insert code chunks as needed by clicking on the "Insert a new code chunk" 
-button (green button with orange arrow) above. Make sure that your code is visible
-in the project you submit. Delete this note when before you submit your work.
-
 **Research quesion 1:**
-If you slept less than 8 hours per day, what is the probability that you got a good mental health?
 
+*** Does sleep affects mental health and your energery?***
 
-```{r}
-brfss2013 %>% 
-  select(qlhlth2, sleptim1,menthlth) %>% 
-  str()
-```
+Filter NaN value
 
 ```{r}
 filteredData = brfss2013[!rowSums(is.na(brfss2013[c('qlhlth2','sleptim1', 'menthlth' )])), ]
+
+nrow(filteredData)
 ```
 
+Comparing to number of observations in data, our interest data might be a bit smaller. But I think it would be sufficient for our analysis
+
+
+Change them to categorical values
 
 ```{r}
 filteredData <- filteredData %>%
   mutate(isEnoughSleep = ifelse(sleptim1 >= 7 & sleptim1 <= 9 ,"Adequate", "Inappropriate"))
 
 filteredData <- filteredData %>%
-  mutate(isHappy = ifelse(menthlth >= 10,"Bad", "Good"))
+  mutate(isHappy = ifelse(menthlth >= 10,"Bad Mood", "Good Mood"))
 
 filteredData <- filteredData %>%
-  mutate(isActive = ifelse(qlhlth2 >= 20,"Energetic", "Sluggish"))
+  mutate(isActive = ifelse(qlhlth2 >= 20,"High", "Low"))
 
 ```
+
+
+Visualise data
 
 ```{r}
 filteredData$isEnoughSleep <- as.factor(filteredData$isEnoughSleep)
@@ -199,16 +192,45 @@ filteredData$isHappy <- as.factor(filteredData$isHappy)
 filteredData$isActive <- as.factor(filteredData$isActive)
 ggplot(filteredData, aes(x=isEnoughSleep, fill = isActive)) +
   geom_bar(position="dodge") + facet_wrap( ~ isHappy, ncol=2) +
-  ggtitle('Does  sleep affects mental health and your energery ')
+  ggtitle('Does sleep affects mental health and your energery?')+
+  scale_fill_discrete(name = "Energy Level")+
+  xlab("Sleep Time") + ylab("Number of people")
 ```
 
+As is evident from the graph, sleep might make you perky when you spend an appropriate time
+
+But it is not have a strongly effect on people has a mental health problems.
+
+Let's look closely at percentages between them.
+
+```{r}
+filteredData %>%
+  group_by(isActive) %>%
+  summarise(per = sum(isEnoughSleep == "Adequate") / nrow(filteredData))
+
+```
+
+```{r}
+filteredData %>%
+  group_by(isHappy) %>%
+  summarise(per = sum(isEnoughSleep == "Adequate") / nrow(filteredData))
+
+```
+
+As excepted, sleep might be promote both better mental and physical health. 
+We cannot conclude causality relation due to observational data.
 
 **Research quesion 2:**
 
+*** Are people who working out catch physical illness regularly ?***
+
+Clean data first
 
 ```{r}
 filteredData = brfss2013[!rowSums(is.na(brfss2013[c('X_totinda','strength','physhlth')])), ]
 ```
+
+Transform data, so that they represent how many time per day did people spend to working out.
 
 ```{r}
 filteredData$strength[(filteredData$strength>= 101) & (filteredData$strength <=199)] =
@@ -227,6 +249,7 @@ filteredData = filteredData[!rowSums(is.na(filteredData[c('X_totinda','strength'
 
 ```
 
+Visualise data
 
 ```{r}
 filteredData$X_totinda <- as.factor(filteredData$X_totinda)
@@ -240,33 +263,97 @@ ggplot(filteredData, aes(x = strength, y = physhlth, colour=X_totinda)) +
 
 ```
 
+I tried so hard to make the plots not over plotting but them appeared overlayed. It is not easy to figure out the different between them due to its similarity. I believe that this obersevational data prevent us to see through the trends in graphs.
 
 **Research quesion 3:**
 
+*** Is there a correlation between education level and tobacco use? ***
+
+**** Which education level did people smoke the most?****
+
+Make data clean first
+
 ```{r}
 filteredData = brfss2013[!rowSums(is.na(brfss2013[c('educa', 'smoke100')])), ]
+```
 
-educa_labs = c("KG", "EL", "HG", "HG_GRD", "COL/TECH/3", "COL/4")
+Create lables for our plot
+```{r}
+edu_lables = c("KG", "EL", "HG", "HG_GRD", "COL/TECH/3", "COL/4")
+```
 
+Seperate our interest data from whole data
 
+```{r}
 filteredData <- filteredData %>% group_by(educa) %>%
   summarise( smoke100 = sum(smoke100 == "Yes"), smoke100_pc = smoke100*100/n())
+```
 
+Visualise data
+
+```{r}
 ggplot(data = filteredData , aes(x = educa, y = smoke100_pc)) + 
   geom_col() +
-  scale_x_discrete(labels = educa_labs) +
+  scale_x_discrete(labels = edu_lables) +
   ylab("% who've smoked 100 cigs") +
   xlab("Education Level") +
   scale_y_continuous(labels = function(x) paste0(x,"%"))
 
-
 ```
 
-**Research quesion 4:**
+People who've been to high school but not graduated smoke the most (~60%).<br> 
+  People who've only been to Kindergarten or graduated college smoke the least (~35%). <br>
+  There is an increase from kindergarten to high school, and then a drop till college graduate.
+  
+**** How many times per day did they smoke?****
 
 ```{r}
-#brfss2013_clean = brfss2013[!rowSums(is.na(brfss2013[c('genhlth','fruitju1 ','fruit1', 'fvbeans', 'fvgreen', 'fvorang', 'vegetab1')])), ]
+
+filteredData = brfss2013[!rowSums(is.na(brfss2013[c('educa', 'smoke100')])), ]
+
+summary(filteredData$smokday2)
+
+
+filteredData = brfss2013[!rowSums(is.na(brfss2013[c('educa', 'smoke100','smokday2')])), ]
+
+summary(filteredData$smokday2)
+
+
 ```
 
+Something's odd with the data we are using <br>
+Maybe people who have smoked 100 cigs did not answer the smokday2 question <br>
+Let's find out!
+
 ```{r}
+sfrq <- brfss2013 %>%
+  filter(!((is.na(educa) & is.na(smoke100)))) %>%
+  select(educa, smokday2)
+
+sum(is.na(filteredData$smokday2))*100 / nrow(sfrq)
+rm(sfrq)
 ```
+No person who has smoked 100 cigs did answer the smokday2 question <br>
+So we will only focus on people who have smoked at least 100 cigs<br>
+
+Clean data for processing
+
+```{r}
+filteredData = brfss2013[!rowSums(is.na(brfss2013[c('educa', 'smokday2')])), ]
+```
+
+Visualise data
+
+```{r}
+filteredData$educa <- as.factor(filteredData$educa)
+filteredData$smokday2 <- as.factor(filteredData$smokday2)
+ggplot(filteredData, aes(x=educa, fill = smokday2)) +
+  geom_bar()+
+  scale_fill_discrete(name = "Frequency of smoking")+
+  scale_x_discrete(labels = edu_lables)+
+  xlab("Education Level") + ylab("Number of people")
+
+```
+
+High school but not graduated has the highest proportion of people who smoke daily<br>
+ Proportion of daily smokers soared from kindergarten to high school, and then dwindled.
