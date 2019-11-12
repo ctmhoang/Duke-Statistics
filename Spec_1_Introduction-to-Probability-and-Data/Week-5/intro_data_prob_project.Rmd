@@ -37,22 +37,22 @@ load("brfss2013.RData")
 BRFSS is an ongoing surveillance system designed to measure behavioral risk factors for the non-institutionalized adult population (18 years of age and older) residing in the US.<br>
 
 BRFSS conducts both landline telephone- and cellular telephone-based surveys. In conducting the BRFSS landline
-telephone survey, interviewers collect data from a randomly selected adult in a household. In conducting the
+telephone survey, interviewers collect data from a <b> randomly selected </b> adult in a household. In conducting the
 cellular telephone version of the BRFSS questionnaire, interviewers collect data from an adult who participates
 by using a cellular telephone and resides in a private residence or college housing.
 
 ### Sample Description
 
-In a telephone survey such as the BRFSS, a sample record is one telephone number in the list of all telephone
-numbers the system randomly selects for dialing. To meet the BRFSS standard for the participating states'
-sample designs, one must be able to justify sample records as a probability sample of all households with
-telephones in the state. All participating areas met this criterion in 2013. Fifty-one projects used a
+In a telephone survey such as the BRFSS,<b> a sample record is one telephone number in the list of all telephone
+numbers the system randomly selects for dialing</b>. To meet the BRFSS standard for the participating states'
+sample designs, one <b>must be able to justify sample records as a probability sample of all households with
+telephones in the state</b>. All participating areas met this criterion in 2013.<b> Fifty-one projects used a
 disproportionate stratified sample (DSS) design for their landline samples. Guam and Puerto Rico used a simple
-random-sample design. <br>
+random-sample design</b>. <br>
 
-In the type of DSS design that states most commonly used in the BRFSS landline telephone sampling, BRFSS
+In the type of DSS design that states most commonly used in the BRFSS landline telephone sampling,<b> BRFSS
 divides telephone numbers into two groups, or strata, which are sampled separately. The high-density and
-medium-density strata contain telephone numbers that are expected to belong mostly to households. Whether a
+medium-density strata contain telephone numbers that are expected to belong mostly to households</b>. Whether a
 telephone number goes into the high-density or medium-density stratum is determined by the number of listed
 household numbers in its hundred block, or set of 100 telephone numbers with the same area code, prefix, and
 first two digits of the suffix and all possible combinations of the last two digits. BRFSS puts numbers from
@@ -64,18 +64,18 @@ Cellular telephone sampling frames are commercially available and the system can
 cellular telephone numbers, but doing so requires specific protocols. The basis of the 2013 BRFSS sampling
 frame is the Telecordia database of telephone exchanges (e.g., 617-492-0000 to 617-492-9999) and 1,000 banks
 (e.g., 617-492-0000 to 617-492-0999). The vendor uses dedicated cellular 1,000 banks, sorted on the basis of
-area code and exchange within a state. BRFSS forms an interval, K, by dividing the population count of
+area code and exchange within a state.<b> BRFSS forms an interval, K, by dividing the population count of
 telephone numbers in the frame, N, by the desired sample size, n. BRFSS divides the frame of telephone
 numbers into n intervals of size K telephone numbers. From each interval, BRFSS draws one 10-digit telephone
-number at random.<br>
+number at random</b>.<br>
 
-The target population for cellular telephone samples in 2013 consists of persons residing in a private residence
+<b>The target population for cellular telephone samples in 2013 consists of persons residing in a private residence
 or college housing, who have a working cellular telephone, are aged 18 and older, and received 90 percent or
-more of their calls on cellular telephones.<br>
+more of their calls on cellular telephones.</b><br>
 
-In the sample design, each state begins with a single stratum. To provide adequate sample sizes for smaller
+<b>In the sample design, each state begins with a single stratum. To provide adequate sample sizes for smaller
 geographically defined populations of interest, however, many states sample disproportionately from strata that
-correspond to sub-state regions. In 2013, the 48 states or territories with disproportionately sampled geographic
+correspond to sub-state regions</b>. In 2013, the 48 states or territories with disproportionately sampled geographic
 strata were Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware, Florida,
 Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Maryland, Massachusetts, 
 Michigan, Minnesota, Mississippi, Missouri, Montana, Nebraska, Nevada, New Hampshire, New Jersey, New
@@ -85,14 +85,14 @@ Wisconsin. As a precaution to protect the confidential responses provided by the
 (such as sub-state geographic identifiers, detailed race/ethnicity, and age greater than 80) in a given year are
 removed.<br>
 
-State health departments may directly collect data from their states or they may use a contractor. In 2013, 11
+<b>State health departments may directly collect data from their states or they may use a contractor</b>. In 2013, 11
 state health departments collected their data in-house; 42 contracted data collection to university survey
 research centers or commercial firms. In 2013, the CDC provided samples purchased from Marketing Systems
 Group, Inc. (MSG) to all 53 states and territories. <br>
 
-Overall, the data collection is based on a stratified sampling strategy.
+<b>Overall, the data collection is based on a stratified sampling strategy.
 The population is divided into groups (States) called strata. Then a random sampling (telephone), has been employed within
-each stratum.
+each stratum.It can be generalized to the US population</b>
 
 ### Data Collection Procedure
 
@@ -129,14 +129,14 @@ Source: [CDC.gov](https://www.cdc.gov/brfss/annual_data/annual_2013.html)
 I’ll focus on a health problem - sleep, work-out and smoking.
 
 **Research quesion 1:**
-Does sleep affects mental health and your energery?
+Does sleep have any relationship between mental health and energery?
 <ul>
     <li>qlhlth2: How many days full of energy in past 30 days?</li>
     <li>sleptim1: How Much Time Do You Sleep ?</li>
     <li>menthlth: Number of Days Mental Health Not Good</li>
 </ul>
 **Research quesion 2:**
-Are people who working out catch physical illness regularly ?
+Are the frequency of working out associated to your physical health?
 <ul>
 <li>physhlth: Now thinking about your physical health, which includes physical illness and injury, for how many days during the
 past 30 days was your physical health not good? </li>
@@ -156,7 +156,7 @@ Is there a correlation between education level and tobacco use?
 
 **Research quesion 1:**
 
-*** Does sleep affects mental health and your energery?***
+*** Does sleep have any relationship between mental health and energery?***
 
 Filter NaN value
 
@@ -222,7 +222,7 @@ We cannot conclude causality relation due to observational data.
 
 **Research quesion 2:**
 
-*** Are people who working out catch physical illness regularly ?***
+*** Are the frequency of working out associated to your physical health?***
 
 Clean data first
 
@@ -255,15 +255,13 @@ Visualise data
 filteredData$X_totinda <- as.factor(filteredData$X_totinda)
 filteredData$physhlth <- as.factor(filteredData$physhlth)
 
-summary(filteredData$physhlth)
-
 ggplot(filteredData, aes(x = strength, y = physhlth, colour=X_totinda)) +
   geom_point(alpha=0.4, position=position_jitter(width=.1,height=.1))+
   facet_wrap( ~ X_totinda, ncol=1)
 
 ```
 
-I tried so hard to make the plots not over plotting but them appeared overlayed. It is not easy to figure out the different between them due to its similarity. I believe that this obersevational data prevent us to see through the trends in graphs.
+I tried so hard to make the plots not over plotting but them appeared overlayed. It is not easy to figure out the different between them due to its similarity. I believe that this obersevational data prevent us to see through the trends in graphs. I will need to working on this problem through out this specialization.
 
 **Research quesion 3:**
 
@@ -326,12 +324,12 @@ Maybe people who have smoked 100 cigs did not answer the smokday2 question <br>
 Let's find out!
 
 ```{r}
-sfrq <- brfss2013 %>%
+temp <- brfss2013 %>%
   filter(!((is.na(educa) & is.na(smoke100)))) %>%
   select(educa, smokday2)
 
-sum(is.na(filteredData$smokday2))*100 / nrow(sfrq)
-rm(sfrq)
+sum(is.na(filteredData$smokday2))*100 / nrow(temp)
+rm(temp) #delete temp data
 ```
 No person who has smoked 100 cigs did answer the smokday2 question <br>
 So we will only focus on people who have smoked at least 100 cigs<br>
